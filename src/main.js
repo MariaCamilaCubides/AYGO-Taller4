@@ -1,8 +1,23 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from 'vue';
+import Buefy from 'buefy';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import '@mdi/font/css/materialdesignicons.css';
 
-Vue.config.productionTip = false
+import router from './router';
+import Layout from './App.vue';
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+
+Vue.config.productionTip = true;
+
+Vue.use(VueAxios, axios);
+Vue.use(Buefy, {
+  defaultIconPack: 'mdi',
+});
+
+const main = new Vue({
+  router,
+  render: (h) => h(Layout),
+}).$mount('#app');
+
+export { main, router };
