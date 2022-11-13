@@ -189,5 +189,10 @@ $link-focus-border: $primary;
     min-width: 100%;
     min-height: 100vh;
   }
+  .profileImage {
+    /* The image used */
+    background-image: url("./assets/loginBackground.jpg");
+    height: 25em;
+  }
 }
 </style>

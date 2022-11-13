@@ -26,7 +26,7 @@
                 icon="account"
                 :to="{ name: 'profile'}"
                 tag="router-link"
-                :active="'profile' === currentRouteName"
+                :active="['profile', 'editProfile'].includes(currentRouteName)"
               />
             </b-menu-list>
           </div>
@@ -37,22 +37,7 @@
         :fixed-top="true"
         :mobile-burger="false"
       >
-        <template #brand>
-          <b-navbar-item
-            v-if="!sidebarOpen"
-            @click="sidebarOpen = true"
-          >
-            <b-icon
-              icon="menu"
-              custom-size="mdi-24px"
-            />
-          </b-navbar-item>
-          <b-navbar-item tag="div">
-            <portal-target name="breadcrumb" />
-          </b-navbar-item>
-        </template>
         <template #end>
-          <portal-target name="navbar-right" />
           <b-navbar-dropdown
             :right="true"
             :arrowless="true"
@@ -63,7 +48,7 @@
               >
                 <UserImage
                   :email="user.email"
-                  :size="21"
+                  :size="40"
                   :is-in-navbar="true"
                   :in-navbar-active="currentRouteName === 'user'"
                   :lazy="false"
@@ -75,7 +60,7 @@
               tag="router-link"
               :active="currentRouteName === 'user'"
             >
-              My profile<br>{{ user.email }}
+              My profile
             </b-navbar-item>
             <hr class="navbar-divider">
             <b-navbar-item
@@ -102,7 +87,7 @@
             name: '',
             email: '',
         },
-        sidebarOpen: false,
+        sidebarOpen: true,
         mainLayoutWidth: 0,
       };
     },
@@ -111,11 +96,11 @@
         return this.$route.name;
       },
       navbarVisible() {
-        return false;
+        return true;
       },
       navbarsStyle() {
         return {
-          padding: '0 2%',
+          padding: '0px 0px 0px 25%',
           marginLeft: '0',
         };
       },
@@ -129,7 +114,7 @@
       },
     },
     mounted() {
-      this.emitStyleForMainLayout();
+      // this.emitStyleForMainLayout();
     },
     methods: {
       emitStyleForMainLayout() {

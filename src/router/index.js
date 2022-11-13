@@ -19,12 +19,12 @@ const routes = [
     name: 'profile',
     path: '/profile',
     component: Vue.component('profile', () => import('@/views/Profile.vue')),
-  },
+  }, */
   {
     name: 'editProfile',
     path: '/:profile/about',
-    component: Vue.component('editProfile', () => import('@/views/EditProfile.vue')),
-  }, */
+    component: Vue.component('editProfileComponent', () => import('@/views/EditProfile.vue')),
+  },
 ];
 
 Vue.use(Router);
