@@ -29,40 +29,43 @@
                             </div>
                             <div class="card-content">
                                 <b-field label="Profile picture" horizontal>
-                                    <b-upload v-model="file" class="file-label">
+                                    <b-upload v-model="profilePicture" class="file-label">
                                         <span class="file-cta">
                                             <b-icon class="file-icon" icon="upload"></b-icon>
-                                            <span class="file-label">{{ file ? file.name : 'Click to upload' }}</span>
+                                            <span class="file-label">{{ profilePicture ? profilePicture.name : 'Click to upload' }}</span>
                                         </span>
                                     </b-upload>
                                 </b-field>
                                 <b-field label="Cover photo" horizontal>
-                                    <b-upload v-model="file" class="file-label">
+                                    <b-upload v-model="coverPhoto" class="file-label">
                                         <span class="file-cta">
                                             <b-icon class="file-icon" icon="upload"></b-icon>
-                                            <span class="file-label">{{ file ? file.name : 'Click to upload' }}</span>
+                                            <span class="file-label">{{ coverPhoto ? coverPhoto.name : 'Click to upload' }}</span>
                                         </span>
                                     </b-upload>
                                 </b-field>
                                 <hr/>
                                 <b-field label="Name" horizontal>
-                                    <b-input v-model="name"></b-input>
+                                    <b-input v-model="user.name"></b-input>
+                                </b-field>
+                                <b-field label="Last name" horizontal>
+                                    <b-input v-model="user.lastName"></b-input>
                                 </b-field>
                                 <b-field label="City" horizontal>
-                                    <b-input v-model="city"></b-input>
+                                    <b-input v-model="user.city"></b-input>
                                 </b-field>
                                 <b-field label="Birthday" horizontal>
                                     <b-datepicker
                                         placeholder="Click to select..."
-                                        v-model="dates"
+                                        v-model="user.birthday"
                                         icon="calendar-today"
                                         position="is-top-right"/>
                                 </b-field>
                                 <b-field label="Phone" horizontal>
-                                    <b-input v-model="phone"></b-input>
+                                    <b-input v-model="user.phone"></b-input>
                                 </b-field>
                                 <b-field label="email" horizontal>
-                                    <b-input v-model="email"></b-input>
+                                    <b-input v-model="user.email"></b-input>
                                 </b-field>
                             </div>
                         </div>
@@ -96,27 +99,27 @@
                                 <hr/>
                                 <div class="container-header">
                                     <div class="grid_5" id="social_icons">
-                                        <p><b-icon icon="account-edit"/>Maria Camila Cubides</p>
+                                        <p><b-icon icon="account-edit"/>{{ user.name }} {{ user.lastName }}</p>
                                     </div>
                                 </div>
                                 <div class="container-header">
                                     <div class="grid_5" id="social_icons">
-                                        <p><b-icon icon="map-marker"/>Bogota</p>
+                                        <p><b-icon icon="map-marker"/>{{ user.city }}</p>
                                     </div>
                                 </div>
                                 <div class="container-header">
                                     <div class="grid_5" id="social_icons">
-                                        <p><b-icon icon="cake-variant"/>02/09</p>
+                                        <p><b-icon icon="cake-variant"/>{{ user.birthday }}</p>
                                     </div>
                                 </div>
                                 <div class="container-header">
                                     <div class="grid_5" id="social_icons">
-                                        <p><b-icon icon="phone"/>3112027733</p>
+                                        <p><b-icon icon="phone"/>{{ user.phone }}</p>
                                     </div>
                                 </div>
                                 <div class="container-header">
                                     <div class="grid_5" id="social_icons">
-                                        <p><b-icon icon="email"/>macacumar97@gmail.com</p>
+                                        <p><b-icon icon="email"/>{{ user.email }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +148,8 @@
         phoneNumber: '',
         user: {},
         loading: false,
-        file: null
+        profilePicture: null,
+        coverPhoto: null,
       };
     },
     computed: {

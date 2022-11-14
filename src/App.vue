@@ -1,11 +1,7 @@
 <template>
-  <div
-    id="page-container"
-  >
+  <div id="page-container">
     <NavBar />
-    <div
-      id="main-layout"
-    >
+    <div id="main-layout">
       <router-view />
     </div>
   </div>

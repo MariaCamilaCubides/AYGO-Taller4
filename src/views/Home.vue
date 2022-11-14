@@ -15,7 +15,7 @@
                                     @error="failed_image = true"
                                 />
                             </p>
-                                <input type="text" autocomplete="on" placeholder="What's on your mind, Camila?" v-model="input" class="input is-rounded">
+                                <input type="text" autocomplete="on" :placeholder="`What's on your mind, ${user.name}?`" v-model="input" class="input is-rounded">
                             </b-field>
                             <b-field>
                                 <emoji-picker @emoji="insert" :search="search" class="force-right">
@@ -40,52 +40,34 @@
                                         </div>
                                     </div>
                                 </emoji-picker>
-                                <b-button style="margin-left: 10px" type="is-primary is-light" icon-left="send" expanded>Post</b-button>
+                                <b-button
+                                    style="margin-left: 10px"
+                                    type="is-primary is-light"
+                                    icon-left="send"
+                                    expanded
+                                    @click="addNewPost()"
+                                >
+                                Post
+                                </b-button>
                             </b-field>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-content">
-                            <div class="media-list">
+                            <div
+                                class="media-list"
+                                v-for="post in historyPosts"
+                                :key="post"
+                            >
                                 <article class="media">
                                     <div class="media-content">
                                         <div class="content">
                                             <p class="media-meta">
-                                                <strong>Sigmund Abbott</strong>
-                                                <small>@xdaniel</small>
-                                                <small class="has-text-grey">2 weeks ago</small>
+                                                <strong>{{post.user.name}} {{post.user.lastName}}</strong>
+                                                <small>@{{ post.user.userName }}</small>
+                                                <small class="has-text-grey">{{ post.createdAt }}</small>
                                             </p>
-                                            <p> Et quam aut aperiam expedita eos sit. Autem accusantium impedit debitis. Ea dolores at rerum. Dolorem et quia iusto modi non atque ea. Sunt ipsam sint aliquam eveniet quaerat et.</p>
-                                        </div>
-                                    </div>
-                                    <div class="media-right">
-                                        <button class="delete"></button>
-                                    </div>
-                                </article>
-                                <article class="media">
-                                    <div class="media-content">
-                                        <div class="content">
-                                            <p class="media-meta">
-                                                <strong>Hertha Simonis</strong>
-                                                <small>@alverta.bernhard</small>
-                                                <small class="has-text-grey">3 weeks ago</small>
-                                            </p>
-                                            <p> Optio laboriosam illo consectetur hic. Perspiciatis veritatis suscipit assumenda porro a vero necessitatibus ipsa. </p>
-                                        </div>
-                                    </div>
-                                    <div class="media-right">
-                                        <button class="delete"></button>
-                                    </div>
-                                </article>
-                                <article class="media">
-                                    <div class="media-content">
-                                        <div class="content">
-                                            <p class="media-meta">
-                                                <strong>Mrs. Elise Corwin I</strong>
-                                                <small>@lisandro35</small>
-                                                <small class="has-text-grey">1 month ago</small>
-                                            </p>
-                                            <p> Est in et aliquid mollitia. Nesciunt autem aspernatur veniam non. Ducimus et et voluptatibus voluptas aut. Aut est aliquid qui amet id. </p>
+                                            <p> {{ post.message }}</p>
                                         </div>
                                     </div>
                                     <div class="media-right">
@@ -100,7 +82,7 @@
                     <div class="card">
                         <div class="card-content">
                             <p class="field">
-                                <strong>Connected users ({{ '0' }})</strong>
+                                <strong>Connected users ({{ connectedUsers }})</strong>
                             </p>
                             <div class="container-header">
                                 <b-field>
@@ -144,6 +126,18 @@
         file: null,
         input: '',
         search: '',
+        connectedUsers: 0,
+        historyPosts: [
+            {
+                user: {
+                    name: 'maria',
+                    lastName: 'cubides',
+                    userName: 'camicumar'
+                },
+                createdAt: '2022-11-13',
+                message: 'Super waohh'
+            }
+        ]
       };
     },
     computed: {
@@ -157,19 +151,18 @@
             console.log(emoji)
             this.input += emoji
         },
-      editName() {
-        this.name = this.user.name;
-        this.lastName = this.user.lastName;
-        this.editNameActive = true;
-      },
-      editPhoneNumber() {
-        this.phoneNumber = this.user.phoneNumber;
-        this.editPhoneActive = true;
-      },
-      saveNewName() {
-      },
-      saveNewPhone() {
-      },
+        addNewPost() {
+            this.historyPosts.push({
+                user: {
+                    name: 'maria',
+                    lastName: 'cubides',
+                    userName: 'camicumar'
+                },
+                createdAt: new Date(Date.now()).toISOString(),
+                message: this.input
+            });
+            this.input = '';
+        }
     },
   };
   </script>

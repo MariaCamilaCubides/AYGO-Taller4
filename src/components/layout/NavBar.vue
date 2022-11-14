@@ -29,9 +29,9 @@
               <b-menu-item
                 label="My account"
                 icon="account"
-                :to="{ name: 'profile'}"
+                :to="{ path: `/${user.userName}/about`}"
                 tag="router-link"
-                :active="['profile', 'editProfile'].includes(currentRouteName)"
+                :active="'editProfile' === currentRouteName"
               />
             </b-menu-list>
           </div>
@@ -61,7 +61,7 @@
               </span>
             </template>
             <b-navbar-item
-              :to="{ name: 'user'}"
+              :to="{ path: `/${user.userName}/about`}"
               tag="router-link"
               :active="currentRouteName === 'user'"
             >
@@ -89,6 +89,7 @@
     data() {
       return {
         user: {
+            userName: '',
             name: '',
             email: '',
         },
