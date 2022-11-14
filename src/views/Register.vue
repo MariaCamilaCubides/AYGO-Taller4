@@ -38,7 +38,6 @@
                     <b-input
                       id="firstName"
                       v-model="firstName"
-                      v-validate="'required'"
                       name="firstName"
                       type="text"
                       placeholder="Your first name"
@@ -53,7 +52,6 @@
                     <b-input
                       id="lastName"
                       v-model="lastName"
-                      v-validate="'required'"
                       name="lastName"
                       type="text"
                       placeholder="Your last name"
@@ -79,7 +77,6 @@
                   <b-input
                     id="password"
                     v-model="password"
-                    v-validate="'required|min:6'"
                     name="password"
                     type="password"
                     :password-reveal="password != ''"
@@ -106,7 +103,6 @@
         </card>
         <div>
           <b-button
-            v-if="!invited"
             expanded
             to="/login"
             class="button"
@@ -156,12 +152,15 @@
       },
       async validateBeforeSubmit() {
         this.updateValuesFromHtml();
+        this.register(this.firstName, this.lastName, this.email.toLowerCase(),
+          this.password);
         console.log('Validar los datos')
       },
       register(name, lastName, email, password) {
         this.isLoading = true;
         // Automatically log the user in after successful signup.
         console.log('Registrar', name, lastName, email, password)
+        this.$router.push('/home');
       },
       capitalizeFirstLeter(text) {
         const splitedText = text.split(' ');

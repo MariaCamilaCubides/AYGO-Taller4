@@ -43,4 +43,22 @@ const router = new Router({
   routes,
 });
 
+function userIsAuthenticated() {
+    return false;
+
+}
+
+router.beforeEach(async (to, from, next) => {
+  
+    const authenticated = await userIsAuthenticated();
+  
+    // Define what to do when user visits root
+    if (to.path === '/') {
+      if (authenticated) return next('/home');
+      return next('/login');
+    }
+
+    return next();
+});
+
 export default router;
