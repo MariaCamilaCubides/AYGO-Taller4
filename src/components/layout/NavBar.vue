@@ -5,6 +5,11 @@
         fullheight
         type="is-light"
       >
+        <img
+            width="150px"
+            src="@/assets/logo.png"
+            alt="MCCM logo"
+          >
         <b-menu
           :accordion="false"
           :activable="false"
@@ -48,7 +53,7 @@
               >
                 <UserImage
                   :email="user.email"
-                  :size="40"
+                  :size="30"
                   :is-in-navbar="true"
                   :in-navbar-active="currentRouteName === 'user'"
                   :lazy="false"

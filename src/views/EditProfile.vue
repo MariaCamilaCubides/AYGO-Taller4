@@ -1,13 +1,11 @@
 <template>
-    <div
-    class="lo-que-sea">
+    <div class="lo-que-sea">
         <card
             external-card="material-card-content"
             url-help=""
         >
-            <section
-                slot="body"
-            >   <div class="profileImage div-wrapper">
+            <section slot="body">
+                   <div class="profileImage div-wrapper">
                     <p class="image is-128x128">
                         <b-image
                             :src="require('@/assets/account-circle.svg')"

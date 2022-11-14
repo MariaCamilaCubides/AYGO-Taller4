@@ -10,12 +10,12 @@ const routes = [
     path: '/register',
     component: Vue.component('registerComponent', () => import('@/views/Register.vue')),
   },
-  /*{
+  {
     name: 'home',
     path: '/home',
-    component: Vue.component('home', () => import('@/views/Home.vue')),
+    component: Vue.component('homeComponent', () => import('@/views/Home.vue')),
   },
-  {
+  /* {
     name: 'profile',
     path: '/profile',
     component: Vue.component('profile', () => import('@/views/Profile.vue')),

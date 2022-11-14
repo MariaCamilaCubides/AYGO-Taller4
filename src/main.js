@@ -6,7 +6,7 @@ import '@mdi/font/css/materialdesignicons.css';
 
 import router from './router';
 import Layout from './App.vue';
-
+import { EmojiPickerPlugin } from 'vue-emoji-picker'
 
 Vue.config.productionTip = true;
 
@@ -14,6 +14,7 @@ Vue.use(VueAxios, axios);
 Vue.use(Buefy, {
   defaultIconPack: 'mdi',
 });
+Vue.use(EmojiPickerPlugin)
 
 const main = new Vue({
   router,
