@@ -1,40 +1,56 @@
 import { Auth } from 'aws-amplify';
 
 export default {
-    async signUp(username, password, email, phone_number) {
+    async signUp(username, password, email) {
         try {
             const { user } = await Auth.signUp({
                 username,
                 password,
                 attributes: {
-                    email,          // optional
-                    phone_number,   // optional - E.164 number convention
-                    // other custom attributes 
+                    email,          
                 },
-                autoSignIn: { // optional - enables auto sign in after user is confirmed
+                autoSignIn: {
                     enabled: true,
                 }
             });
-            console.log('usuario', user);
+            return { result: true, user };
         } catch (error) {
-            console.log('error signing up:', error);
+            return { result: false, error: error.message };
         }
-    } ,  
+    },
+
+    async resendConfirmationCode(username) {
+        try {
+            await Auth.resendSignUp(username);
+            return { result: true };
+        } catch (error) {
+            return { result: false, error: error.message };
+        }
+    },
+
+    async confirmSignUp(username, code) {
+        try {
+          await Auth.confirmSignUp(username, code);
+          return { result: true };
+        } catch (error) {
+            return { result: false, error: error.message };
+        }
+    },
 
     async signIn(username, password) {
         try {
             const user = await Auth.signIn(username, password);
-            console.log(user);
+            return { result: true, user };
         } catch (error) {
-            console.log('error signing in', error);
+            return { result: false, error: error.message };
         }
     },
 
     async signOut() {
         try {
-            await Auth.signOut();
+            await Auth.signOut({ global: true });
         } catch (error) {
-            console.log('error signing out: ', error);
+            return { result: false, error: error.toString() };
         }
-    }
+    },
 }

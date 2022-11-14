@@ -21,6 +21,48 @@
               url-help=""
             >
               <section
+                v-if="validateEmail"
+                slot="header"
+                class="modal-card-body"
+              >
+                <p
+                  style="margin-top: 12px;"
+                  class="title"
+                >
+                  Verify your MCCM account
+                </p>
+                <div v-if="validateEmail">
+                  <b-field
+                    label="Authentication code"
+                  >
+                    <b-input
+                      v-model="validationCode"
+                      v-validate="'required'"
+                      name="validationCode"
+                      placeholder="6-Digit code"
+                      autocomplete="off"
+                      type="text"
+                      inputmode="numeric"
+                      pattern="[0-9]*"
+                    />
+                  </b-field>
+                  <span
+                    v-show="errors.has('validationCode')"
+                    class="help is-danger"
+                  >The code is required</span>
+                  <div style="display: flex;justify-content: center;">
+                    <b-icon
+                      style="margin-top:4px;"
+                      icon="email"
+                    />
+                    <p>
+                      A verification code for your account has been sent to your email.
+                    </p>
+                  </div>
+                </div>
+              </section>
+              <section
+                v-else
                 slot="header"
                 class="modal-card-body"
               >
@@ -30,53 +72,47 @@
                 >
                   Create your MCCM account
                 </p>
-                <div class="columns mb-0">
-                  <b-field
-                    label="First name"
-                    class="column mb-0 field-column"
-                  >
-                    <b-input
-                      id="firstName"
-                      v-model="firstName"
-                      name="firstName"
-                      type="text"
-                      placeholder="Your first name"
-                      focus
-                      @focus="updateValuesFromHtml"
-                    />
-                  </b-field>
-                  <b-field
-                    label="Last name"
-                    class="column mb-0 field-column"
-                  >
-                    <b-input
-                      id="lastName"
-                      v-model="lastName"
-                      name="lastName"
-                      type="text"
-                      placeholder="Your last name"
-                      @focus="updateValuesFromHtml"
-                    />
-                  </b-field>
-                </div>
+                <b-field
+                  label="User name"
+                >
+                  <b-input
+                    id="user"
+                    v-model="user"
+                    v-validate="'required'"
+                    name="user"
+                    type="text"
+                    placeholder="Your user"
+                    @focus="updateValuesFromHtml"
+                  />
+                </b-field>
+                <span
+                  v-show="errors.has('user')"
+                  class="help is-danger"
+                >{{ 'User name is required' }}</span>
                 <b-field
                   label="Email"
                 >
                   <b-input
                     id="email"
                     v-model="email"
+                    v-validate="'required'"
                     name="email"
                     type="email"
                     placeholder="Your email"
                     @focus="updateValuesFromHtml"
                   />
                 </b-field>
+                <span
+                  v-show="errors.has('email')"
+                  class="help is-danger"
+                >Email is required</span>
                 <b-field
                   label="Password"
                 >
                   <b-input
                     id="password"
                     v-model="password"
+                    v-validate="'required'"
                     name="password"
                     type="password"
                     :password-reveal="password != ''"
@@ -85,6 +121,10 @@
                     @focus="updateValuesFromHtml"
                   />
                 </b-field>
+                <span
+                  v-show="errors.has('password')"
+                  class="help is-danger"
+                >Password is required</span>
               </section>
               <hr class="footerLine">
               <div
@@ -95,7 +135,7 @@
                   :class="{'is-loading': isLoading }"
                   class="button is-primary main-card-form-button"
                 >
-                  Create account
+                  {{ validateEmail ? 'Verify account':'Create account' }}
                 </button>
               </div>
             </card>
@@ -119,6 +159,8 @@
   <script>
   import card from '@/components/cross/Card.vue';
   import cognitoAuthentication from '@/helpers/cognitoAuthentications';
+  import toastMessage from '@/helpers/toastMessage';
+
   export default {
     name: 'RegisterComponent',
     metaInfo: {
@@ -132,46 +174,64 @@
         firstName: '',
         lastName: '',
         email: '',
+        user: '',
         password: '',
         isLoading: false,
         error: undefined,
         cognitoAuthentication,
+        validateEmail: false,
+        validationCode: '',
       };
     },
     methods: {
       updateValuesFromHtml() {
-        // The @input and @change events are not called on some iOS browsers when tools like 1Password
-        // fill out the login form, so the html has the right value but the v-model is empty
-        // here we fill the v-model with the html value
-        const firstNameInput = document.getElementById('firstName');
-        const lastNameInput = document.getElementById('lastName');
         const emailInput = document.getElementById('email');
+        const userInput = document.getElementById('user');
         const passwordInput = document.getElementById('password');
-        this.firstName = firstNameInput ? this.capitalizeFirstLeter(firstNameInput.value) : '';
-        this.lastName = lastNameInput ? this.capitalizeFirstLeter(lastNameInput.value) : '';
         this.email = emailInput ? emailInput.value : this.email;
+        this.user = userInput ? userInput.value : this.user;
         this.password = passwordInput ? passwordInput.value : this.password;
       },
       async validateBeforeSubmit() {
         this.updateValuesFromHtml();
-        this.register(this.firstName, this.lastName, this.email.toLowerCase(),
-          this.password);
-        console.log('Validar los datos')
+        if (this.validateEmail) {
+          if (!this.validationCode || this.validationCode.length !== 6) {
+            this.errors.add({
+              field: 'validationCode',
+              msg: 'The code is required',
+            });
+            return;
+          }
+          this.signIn();
+        } else {
+          const result = await this.$validator.validateAll();
+          if (result) {
+            this.register();
+          }
+        }
       },
-      register(name, lastName, email, password) {
+      async register() {
         this.isLoading = true;
-        // Automatically log the user in after successful signup.
-        console.log('Registrar', name, lastName, email, password)
-        this.cognitoAuthentication.signUp(name, password, email, '311292');
-        this.$router.push('/home');
+        const register = await this.cognitoAuthentication.signUp(
+          this.user,
+          this.password,
+          this.email
+        );
+        this.isLoading = false;
+        if (!register.result) {
+          toastMessage.showError(register.error);
+          return;
+        }
+        this.validateEmail = true;
       },
-      capitalizeFirstLeter(text) {
-        const splitedText = text.split(' ');
-        let finalText = '';
-        splitedText.forEach((currentText) => {
-          finalText += `${currentText.charAt(0).toUpperCase()}${currentText.slice(1)} `;
-        });
-        return finalText.trim();
+      async signIn() {
+        const signInResult = await this.cognitoAuthentication.signIn(this.user, this.password)
+        if (!signInResult) {
+          toastMessage.showError('An error occurred with the automatic login');
+          return;
+        }
+        toastMessage.showSuccess('Your account has been successfully created.')
+        this.$router.push(`${this.user}/about`);
       },
     },
   };
