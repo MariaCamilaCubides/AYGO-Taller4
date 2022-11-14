@@ -102,7 +102,6 @@
         return this.$route.name;
       },
       navbarVisible() {
-        console.log(this.currentRouteName)
         return this.currentRouteName && this.currentRouteName !== 'login' && this.currentRouteName !== 'register';
       },
       navbarsStyle() {

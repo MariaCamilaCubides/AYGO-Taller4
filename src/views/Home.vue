@@ -148,7 +148,6 @@
     },
     methods: {
         insert(emoji) {
-            console.log(emoji)
             this.input += emoji
         },
         addNewPost() {
