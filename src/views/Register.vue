@@ -118,6 +118,7 @@
   
   <script>
   import card from '@/components/cross/Card.vue';
+  import cognitoAuthentication from '@/helpers/cognitoAuthentications';
   export default {
     name: 'RegisterComponent',
     metaInfo: {
@@ -134,6 +135,7 @@
         password: '',
         isLoading: false,
         error: undefined,
+        cognitoAuthentication,
       };
     },
     methods: {
@@ -160,6 +162,7 @@
         this.isLoading = true;
         // Automatically log the user in after successful signup.
         console.log('Registrar', name, lastName, email, password)
+        this.cognitoAuthentication.signUp(name, password, email, '311292');
         this.$router.push('/home');
       },
       capitalizeFirstLeter(text) {
