@@ -36,29 +36,30 @@
               </b-notification>
               <div>
                 <b-field
-                  :label="'Email'"
+                  :label="'User'"
                 >
                   <b-input
-                    id="email"
-                    v-model="email"
-                    name="email"
-                    :type="'email'"
-                    :placeholder="'Your email'"
+                    id="user"
+                    v-model="user"
+                    v-validate="'required'"
+                    name="user"
+                    :placeholder="'Your username'"
                     autocomplete="username"
                     @focus="updateValuesFromHtml"
                   />
                 </b-field>
+                <span
+                  v-show="errors.has('user')"
+                  class="help is-danger"
+                >User name is required</span>
                 <b-field>
                   <template #label>
                     Password
-                    <a
-                      style="font-size: 14px;display:block;float:right;"
-                      @click="resetPasswordOpen = true"
-                    >Forgot your password?</a>
                   </template>
                   <b-input
                     id="password"
                     v-model="password"
+                    v-validate="'required'"
                     name="password"
                     type="password"
                     :password-reveal="password != ''"
@@ -67,6 +68,10 @@
                     @focus="updateValuesFromHtml"
                   />
                 </b-field>
+                <span
+                  v-show="errors.has('password')"
+                  class="help is-danger"
+                >Password is required</span>
               </div>
               <button
                 type="submit"
@@ -101,61 +106,57 @@
             Don't have an account? Sign up
           </b-button>
         </div>
-        <b-modal :active.sync="resetPasswordOpen">
-          <reset-password :current-email="email" />
-        </b-modal>
       </div>
     </div>
   </template>
   
   <script>
-  import resetPasswordModal from '@/components/authentication/SendResetPasswordModal.vue';
   import card from '@/components/cross/Card.vue';
+  import cognitoAuthentication from '@/helpers/cognitoAuthentications';
+  import toastMessage from '@/helpers/toastMessage';
+
   export default {
     name: 'LoginComponent',
     metaInfo: {
       title: 'Sign in',
     },
     components: {
-      'reset-password': resetPasswordModal,
       card,
     },
     mixins: [],
     data() {
       return {
-        email: '',
+        user: '',
         password: '',
         isLoading: false,
         error: undefined,
-        resetPasswordOpen: false,
+        cognitoAuthentication,
       };
     },
     methods: {
       updateValuesFromHtml() {
-        // The @input and @change events are not called on some iOS browsers when tools like 1Password
-        // fill out the login form, so the html has the right value but the v-model is empty
-        // here we fill the v-model with the html value
-        const emailInput = document.getElementById('email');
+        const userInput = document.getElementById('user');
         const passwordInput = document.getElementById('password');
-        this.email = emailInput ? emailInput.value : this.email;
+        this.user = userInput ? userInput.value : this.user;
         this.password = passwordInput ? passwordInput.value : this.password;
       },
-      validateBeforeSubmit() {
+      async validateBeforeSubmit() {
         this.updateValuesFromHtml();
-          if (!this.email || !this.password) {
-            console.log('error')
-            return;
-          }
-          this.login();    
-      },
-      showError(error) {
-        this.isLoading = false;
-        this.error = error;
+        const result = await this.$validator.validateAll();
+        if (result) {
+          this.login();  
+        }  
       },
       async login() {
         this.isLoading = true;
         this.error = null;
-        console.log('login')
+        const login = await this.cognitoAuthentication.signIn(this.user, this.password)
+        this.isLoading = false;
+        if (!login.result) {
+          toastMessage.showError(login.error);
+          return;
+        }
+        this.$router.push('home');
       },
     },
   };

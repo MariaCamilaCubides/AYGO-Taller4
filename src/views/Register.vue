@@ -88,7 +88,7 @@
                 <span
                   v-show="errors.has('user')"
                   class="help is-danger"
-                >{{ 'User name is required' }}</span>
+                >User name is required</span>
                 <b-field
                   label="Email"
                 >
