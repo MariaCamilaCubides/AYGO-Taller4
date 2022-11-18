@@ -7,14 +7,14 @@
                         <div class="card-content">
                             <b-field>
                                 <p class="image is-64x64">
-                                <b-image
-                                    :src="require('@/assets/account-circle.svg')"
-                                    :src-fallback="require('@/assets/account-circle.svg')"
-                                    :rounded="true"
-                                    :lazy="false"
-                                    @error="failed_image = true"
-                                />
-                            </p>
+                                    <b-image
+                                        :src="require('@/assets/account-circle.svg')"
+                                        :src-fallback="require('@/assets/account-circle.svg')"
+                                        :rounded="true"
+                                        :lazy="false"
+                                        @error="failed_image = true"
+                                    />
+                                </p>
                                 <input type="text" autocomplete="on" :placeholder="`What's on your mind, ${user.name}?`" v-model="input" class="input is-rounded">
                             </b-field>
                             <b-field>
@@ -106,17 +106,15 @@
     </div>
 </template>
   
-  <script>
-  // import card from '@/components/cross/Card.vue';
-  // import UserImage from '@/components/cross/UserImage.vue';
-  export default {
+<script>
+import { mapState } from 'vuex';
+// import posts from '@/services/posts';
+import users from '@/services/users';
+
+export default {
     name: 'homeComponent',
-    components: {
-      // card,
-      // UserImage,
-    },
-    data() {
-      return {
+data() {
+    return {
         isLoading: false,
         name: '',
         lastName: '',
@@ -127,53 +125,38 @@
         input: '',
         search: '',
         connectedUsers: 0,
-        historyPosts: [
-            {
-                user: {
-                    name: 'maria',
-                    lastName: 'cubides',
-                    userName: 'camicumar'
-                },
-                createdAt: '2022-11-13',
-                message: 'Super waohh'
-            }
-        ]
-      };
+        historyPosts: [],
+        users,
+    };
+},
+computed: {
+    ...mapState(['authData']),
+},
+created() {
+    // setInterval(() => {
+    //     this.historyPosts = this.posts.getAllPosts(this.authData)
+    // }, 1000);
+},
+methods: {
+    insert(emoji) {
+        this.input += emoji
+        this.users.createUser(this.authData)
     },
-    computed: {
-      nameToShow() {
-        if (!this.user.name && !this.user.lastName) return '(Name and last name not registered)';
-        return `${this.user.name || ''} ${this.user.lastName || ''}`;
-      },
-    },
-    methods: {
-        insert(emoji) {
-            this.input += emoji
-        },
-        addNewPost() {
-            this.historyPosts.push({
-                user: {
-                    name: 'maria',
-                    lastName: 'cubides',
-                    userName: 'camicumar'
-                },
-                createdAt: new Date(Date.now()).toISOString(),
-                message: this.input
-            });
-            this.input = '';
-        }
-    },
-  };
-  </script>
-  
-  <style scoped>
+    addNewPost() {
+        // this.posts.createPost(this.input, this.authData);
+        this.input = '';
+    }
+},
+};
+</script>
 
-  .lo-que-sea {
+<style scoped>
+.lo-que-sea {
     padding: 0px 0px 0px 17em;
     display: block;
     align-items: center;
     justify-content: center;
-  }
+}
 
 .div-wrapper {
     display: flex;

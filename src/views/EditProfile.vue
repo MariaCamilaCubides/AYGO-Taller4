@@ -46,13 +46,13 @@
                                 </b-field>
                                 <hr/>
                                 <b-field label="Name" horizontal>
-                                    <b-input v-model="user.name"></b-input>
+                                    <b-input v-model="user.name" icon-right="pencil"></b-input>
                                 </b-field>
                                 <b-field label="Last name" horizontal>
-                                    <b-input v-model="user.lastName"></b-input>
+                                    <b-input v-model="user.lastName" icon-right="pencil"></b-input>
                                 </b-field>
                                 <b-field label="City" horizontal>
-                                    <b-input v-model="user.city"></b-input>
+                                    <b-input v-model="user.city" icon-right="pencil"></b-input>
                                 </b-field>
                                 <b-field label="Birthday" horizontal>
                                     <b-datepicker
@@ -62,12 +62,16 @@
                                         position="is-top-right"/>
                                 </b-field>
                                 <b-field label="Phone" horizontal>
-                                    <b-input v-model="user.phone"></b-input>
+                                    <b-input v-model="user.phone" icon-right="pencil"></b-input>
                                 </b-field>
                                 <b-field label="email" horizontal>
-                                    <b-input v-model="user.email"></b-input>
+                                    <b-input v-model="user.email" disabled></b-input>
                                 </b-field>
                             </div>
+                            <b-button
+                            class="is-primary force-right"
+                            @click="saveProfile"
+                            >Save</b-button>
                         </div>
                     </section>
                     <section class="column">
@@ -99,7 +103,7 @@
                                 <hr/>
                                 <div class="container-header">
                                     <div class="grid_5" id="social_icons">
-                                        <p><b-icon icon="account-edit"/>{{ user.name }} {{ user.lastName }}</p>
+                                        <p><b-icon icon="account"/>{{ user.name }} {{ user.lastName }}</p>
                                     </div>
                                 </div>
                                 <div class="container-header">
@@ -132,45 +136,40 @@
 </template>
   
   <script>
+  import { mapState } from 'vuex';
   import card from '@/components/cross/Card.vue';
-  // import UserImage from '@/components/cross/UserImage.vue';
+  import users from '@/services/users';
+
   export default {
     name: 'EditProfileComponent',
     components: {
       card,
-      // UserImage,
     },
     data() {
       return {
         isLoading: false,
-        name: '',
-        lastName: '',
-        phoneNumber: '',
-        user: {},
+        currentUser: {},
         loading: false,
         profilePicture: null,
         coverPhoto: null,
+        user: {},
+        users,
       };
     },
     computed: {
+        ...mapState(['authData']),
       nameToShow() {
+        console.log(this.user)
         if (!this.user.name && !this.user.lastName) return '(Name and last name not registered)';
         return `${this.user.name || ''} ${this.user.lastName || ''}`;
       },
     },
+    created() {
+        this.user = this.users.getUser(this.authData);
+    },
     methods: {
-      editName() {
-        this.name = this.user.name;
-        this.lastName = this.user.lastName;
-        this.editNameActive = true;
-      },
-      editPhoneNumber() {
-        this.phoneNumber = this.user.phoneNumber;
-        this.editPhoneActive = true;
-      },
-      saveNewName() {
-      },
-      saveNewPhone() {
+      saveProfile() {
+        this.users.updateUser({...this.user, ...this.authData})
       },
     },
   };

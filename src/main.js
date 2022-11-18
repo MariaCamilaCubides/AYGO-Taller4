@@ -9,12 +9,10 @@ import { EmojiPickerPlugin } from 'vue-emoji-picker'
 import '@mdi/font/css/materialdesignicons.css';
 
 import router from './router';
+import store from './store'
 import Layout from './App.vue';
-// import en from '../locale/en';
 
 Vue.config.productionTip = true;
-
-// VeeValidate.Validator({ en });
 
 Vue.use(VueAxios, axios);
 Vue.use(Buefy, {
@@ -34,6 +32,7 @@ Auth.configure();
 
 const main = new Vue({
   router,
+  store,
   render: (h) => h(Layout),
 }).$mount('#app');
 

@@ -29,7 +29,7 @@
               <b-menu-item
                 label="My account"
                 icon="account"
-                :to="{ path: `/${user.userName}/about`}"
+                :to="{ path: `/${authData.userName}/about`}"
                 tag="router-link"
                 :active="'editProfile' === currentRouteName"
               />
@@ -80,24 +80,26 @@
   </template>
   
   <script>
-  import UserImage from '@/components/cross/UserImage.vue';
-  export default {
-    name: 'NavBar',
-    components: {
-      UserImage,
-    },
-    data() {
-      return {
-        user: {
-            userName: '',
-            name: '',
-            email: '',
+    import { mapState } from 'vuex';
+    import UserImage from '@/components/cross/UserImage.vue';
+    export default {
+        name: 'NavBar',
+        components: {   
+            UserImage,
         },
+    data() {
+        return {
+            user: {
+                userName: '',
+                name: '',
+                email: '',
+            },
         sidebarOpen: true,
         mainLayoutWidth: 0,
       };
     },
     computed: {
+        ...mapState(['authData']),
       currentRouteName() {
         return this.$route.name;
       },
@@ -119,8 +121,10 @@
         if (from.path === '/') return;
       },
     },
-    mounted() {
-      // this.emitStyleForMainLayout();
+    created() {
+        setInterval(() => {
+            // Get connected users
+        }, 1000);
     },
     methods: {
       emitStyleForMainLayout() {

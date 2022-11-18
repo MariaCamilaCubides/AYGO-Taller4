@@ -157,9 +157,11 @@
   </template>
   
   <script>
+  import { mapMutations } from 'vuex';
   import card from '@/components/cross/Card.vue';
   import cognitoAuthentication from '@/helpers/cognitoAuthentications';
   import toastMessage from '@/helpers/toastMessage';
+  import users from '@/services/users';
 
   export default {
     name: 'RegisterComponent',
@@ -181,9 +183,11 @@
         cognitoAuthentication,
         validateEmail: false,
         validationCode: '',
+        users,
       };
     },
     methods: {
+      ...mapMutations(['authUser']),
       updateValuesFromHtml() {
         const emailInput = document.getElementById('email');
         const userInput = document.getElementById('user');
@@ -225,11 +229,25 @@
         this.validateEmail = true;
       },
       async signIn() {
+        await this.cognitoAuthentication.confirmSignUp(this.user, this.validationCode)
         const signInResult = await this.cognitoAuthentication.signIn(this.user, this.password)
-        if (!signInResult) {
+        console.log(signInResult)
+        if (!signInResult.result) {
           toastMessage.showError('An error occurred with the automatic login');
           return;
         }
+        const { user } = signInResult;
+        this.authUser(user);
+        const userSession = user.getSignInUserSession();
+        const idToken = userSession.getIdToken();
+        const token = idToken.getJwtToken();
+        const payload = idToken.decodePayload();
+        const x = {
+          userName: payload['cognito:username'],
+          email: payload.email,
+          authToken: token,
+        }
+        this.users.createUser(x)
         toastMessage.showSuccess('Your account has been successfully created.')
         this.$router.push(`${this.user}/about`);
       },

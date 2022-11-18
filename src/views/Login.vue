@@ -111,6 +111,7 @@
   </template>
   
   <script>
+  import { mapMutations } from 'vuex';
   import card from '@/components/cross/Card.vue';
   import cognitoAuthentication from '@/helpers/cognitoAuthentications';
   import toastMessage from '@/helpers/toastMessage';
@@ -134,6 +135,7 @@
       };
     },
     methods: {
+      ...mapMutations(['authUser','connectedUsers']),
       updateValuesFromHtml() {
         const userInput = document.getElementById('user');
         const passwordInput = document.getElementById('password');
@@ -151,11 +153,14 @@
         this.isLoading = true;
         this.error = null;
         const login = await this.cognitoAuthentication.signIn(this.user, this.password)
+        console.log(login)
         this.isLoading = false;
         if (!login.result) {
           toastMessage.showError(login.error);
           return;
         }
+        this.authUser(login.user);
+        this.connectedUsers();
         this.$router.push('home');
       },
     },
