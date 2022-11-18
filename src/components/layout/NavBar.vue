@@ -82,6 +82,9 @@
   <script>
     import { mapState } from 'vuex';
     import UserImage from '@/components/cross/UserImage.vue';
+    import cognitoAuthentication from '@/helpers/cognitoAuthentications';
+    import users from '@/services/users';
+
     export default {
         name: 'NavBar',
         components: {   
@@ -89,13 +92,15 @@
         },
     data() {
         return {
-            user: {
-                userName: '',
-                name: '',
-                email: '',
-            },
-        sidebarOpen: true,
-        mainLayoutWidth: 0,
+          user: {
+              userName: '',
+              name: '',
+              email: '',
+          },
+          sidebarOpen: true,
+          mainLayoutWidth: 0,
+          users,
+          cognitoAuthentication,
       };
     },
     computed: {
@@ -104,7 +109,14 @@
         return this.$route.name;
       },
       navbarVisible() {
-        return this.currentRouteName && this.currentRouteName !== 'login' && this.currentRouteName !== 'register';
+        const isVisible = this.currentRouteName && this.currentRouteName !== 'login' && this.currentRouteName !== 'register';
+        if (isVisible) {
+          const user = this.authData;
+          user.status = 1;
+          this.updateUser();
+          this.users.updateUserStatus(user);
+        }
+        return isVisible;
       },
       navbarsStyle() {
         return {
@@ -121,12 +133,15 @@
         if (from.path === '/') return;
       },
     },
-    created() {
-        setInterval(() => {
-            // Get connected users
-        }, 1000);
+    destroyed() {
+      const user = this.authData;
+        user.status = 0;
+        this.users.updateUserStatus(user);
     },
     methods: {
+      updateUser() {
+        this.user = this.authData;
+      },
       emitStyleForMainLayout() {
         this.$nextTick(() => {
           let left = 0;
@@ -148,7 +163,7 @@
         });
       },
       logoutApp() {
-        this.logout().then(() => this.$router.go('/login'));
+        this.cognitoAuthentication.signOut().then(() => this.$router.go('/login'));
       },
     },
   };

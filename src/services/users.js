@@ -1,24 +1,17 @@
 import axios from 'axios';
 
-const url = `${'https://7basf3nw96.execute-api.us-east-1.amazonaws.com/v1'}/users`;
+const url = `${process.env.VUE_APP_API_URL}/users`;
 
 export default {
     async getUser(data) {
-        const currentUser = await axios.get(`${url}?userName=${data.userName}`,{
-            headers: {
-                Authorization: data.authToken
-            }
-        });
-        return currentUser;
-    },
-
-    async createUser(data) {
-        console.log('CREATE USER', data.token)
         try {
-            const response = await axios.post(`${url}`,
+            const response = await axios.post(url,
                 {
-                    userName: data.userName,
-                    email: data.email,
+                    service: 'users',
+                    action: 'get',
+                    data: {
+                        userName: data.userName,
+                    }   
                 },
                 {
                     headers: {
@@ -26,33 +19,83 @@ export default {
                         "content-type": "application/json"
                     }
                 });
-            console.log('create user response', response);
+            return response;
         } catch (e) {
-            console.log(e)
+            return null;
+        }
+    },
+
+    async createUser(data) {
+        try {
+            const response = await axios.post(url,
+                {
+                    service: 'users',
+                    action: 'create',
+                    data: {
+                        userName: data.userName,
+                        email: data.email
+                    }   
+                },
+                {
+                    headers: {
+                        "Authorization": data.token,
+                        "content-type": "application/json"
+                    }
+                });
+            return response;
+        } catch (e) {
+            return null;
         }
     },
 
     async updateUser(data) {
-        await axios.post(`${url}`,{
-            headers: {
-                Authorization: data.authToken
-            },
-            body: JSON.stringify({
-                userName: data.userName,
-                name: data.name,
-                lastName: data.lastName,
-                birthday: data.birthday,
-                phone: data.phone,
-                email: data.email,
-            })
-        });
+        try {
+            const response = await axios.post(url,
+                {
+                    service: 'users',
+                    action: 'patch',
+                    data: {
+                        userName: data.userName,
+                        name: data.name,
+                        lastName: data.lastName,
+                        email: data.email,
+                        city: data.city,
+                        birthday: data.birthday,
+                        phone: data.phone
+                    }
+                },
+                {
+                    headers: {
+                        "Authorization": data.authToken,
+                        "content-type": "application/json"
+                    }
+                });
+            return response;
+        } catch (e) {
+            return null;
+        }
     },
 
-    async deleteUser(data) {
-        await axios.delete(`${url}?userName=${data.userName}`,{
-            headers: {
-                Authorization: data.authToken
-            }
-        });
+    async updateUserStatus(data) {
+        try {
+            const response = await axios.post(url,
+                {
+                    service: 'users',
+                    action: 'updateStatus',
+                    data: {
+                        userName: data.userName,
+                        status: data.status,
+                    }
+                },
+                {
+                    headers: {
+                        "Authorization": data.authToken,
+                        "content-type": "application/json"
+                    }
+                });
+            return response;
+        } catch (e) {
+            return null;
+        }
     },
 };

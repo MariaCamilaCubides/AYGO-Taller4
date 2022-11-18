@@ -135,7 +135,7 @@
       };
     },
     methods: {
-      ...mapMutations(['authUser','connectedUsers']),
+      ...mapMutations(['authUser']),
       updateValuesFromHtml() {
         const userInput = document.getElementById('user');
         const passwordInput = document.getElementById('password');
@@ -153,14 +153,12 @@
         this.isLoading = true;
         this.error = null;
         const login = await this.cognitoAuthentication.signIn(this.user, this.password)
-        console.log(login)
         this.isLoading = false;
         if (!login.result) {
           toastMessage.showError(login.error);
           return;
         }
         this.authUser(login.user);
-        this.connectedUsers();
         this.$router.push('home');
       },
     },

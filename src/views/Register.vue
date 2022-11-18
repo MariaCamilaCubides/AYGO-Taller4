@@ -206,7 +206,8 @@
             });
             return;
           }
-          this.signIn();
+          this.isLoading = true;
+          this.validateCode();
         } else {
           const result = await this.$validator.validateAll();
           if (result) {
@@ -228,50 +229,60 @@
         }
         this.validateEmail = true;
       },
+      async validateCode() {
+        const codeVerification = await this.cognitoAuthentication.confirmSignUp(this.user, this.validationCode)
+        if (!codeVerification.result) {
+          toastMessage.showError(codeVerification.error);
+          return;
+        }
+        this.signIn();
+      },
       async signIn() {
-        await this.cognitoAuthentication.confirmSignUp(this.user, this.validationCode)
         const signInResult = await this.cognitoAuthentication.signIn(this.user, this.password)
-        console.log(signInResult)
         if (!signInResult.result) {
           toastMessage.showError('An error occurred with the automatic login');
           return;
         }
         const { user } = signInResult;
-        this.authUser(user);
+        await this.createUser(user);
+        this.isLoading = false;
+        this.validateEmail = false;
+        toastMessage.showSuccess('Your account has been successfully created.')
+        this.$router.push(`${this.user}/about`);
+      },
+      async createUser(user) {
         const userSession = user.getSignInUserSession();
         const idToken = userSession.getIdToken();
         const token = idToken.getJwtToken();
         const payload = idToken.decodePayload();
-        const x = {
+        const finalUser = {
           userName: payload['cognito:username'],
           email: payload.email,
-          authToken: token,
+          token,
         }
-        this.users.createUser(x)
-        toastMessage.showSuccess('Your account has been successfully created.')
-        this.$router.push(`${this.user}/about`);
-      },
+        return this.users.createUser(finalUser)
+      }
     },
   };
   </script>
   
-  <style scoped>
-  .loginAndRegisterContainer{
-    width:525px;
-    padding-bottom: 1rem;
+<style scoped>
+.loginAndRegisterContainer{
+  width:525px;
+  padding-bottom: 1rem;
+}
+.loginAndRegisterContainerPhone{
+  width:95%;
+  padding-bottom: 1rem;
+}
+.card-form-container {
+  max-width: 750px;
+}
+</style>
+
+<style>
+  .field-column .field {
+    display: flex;
+    flex-direction: column;
   }
-  .loginAndRegisterContainerPhone{
-    width:95%;
-    padding-bottom: 1rem;
-  }
-  .card-form-container {
-    max-width: 750px;
-  }
-  </style>
-  
-  <style>
-    .field-column .field {
-      display: flex;
-      flex-direction: column;
-    }
-  </style>
+</style>

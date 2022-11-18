@@ -158,14 +158,14 @@
     },
     computed: {
         ...mapState(['authData']),
-      nameToShow() {
-        console.log(this.user)
-        if (!this.user.name && !this.user.lastName) return '(Name and last name not registered)';
-        return `${this.user.name || ''} ${this.user.lastName || ''}`;
-      },
     },
-    created() {
-        this.user = this.users.getUser(this.authData);
+    async created() {
+        const response = await this.users.getUser(this.authData);
+        if (!response) {
+            console.log('error');
+        }
+        const userItem = JSON.parse(response.data.body);
+        this.user = userItem.Item;
     },
     methods: {
       saveProfile() {

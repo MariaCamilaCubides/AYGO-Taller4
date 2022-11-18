@@ -23,9 +23,9 @@ Vue.use(VeeValidate);
 
 Amplify.configure({
   Auth: {      
-      region: 'us-east-1',
-      userPoolId: 'us-east-1_1asC3Bt4L',
-      userPoolWebClientId: '7lrpq92deejoc39i1eab4vfd35',
+      region: process.env.VUE_APP_REGION,
+      userPoolId: process.env.VUE_APP_USER_POOL_ID,
+      userPoolWebClientId: process.env.VUE_APP_USER_POOL_WEB_CLIENT_ID,
   }
 });
 Auth.configure();
