@@ -1,26 +1,29 @@
-import axios from 'axios';
-
 const url = `${process.env.VUE_APP_API_URL}/users`;
 
 export default {
     async getUser(data) {
         try {
-            const response = await axios.post(url,
-                {
+            const requestOptions = {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": data.token
+                },
+                body: JSON.stringify({
                     service: 'users',
                     action: 'get',
                     data: {
                         userName: data.userName
-                    }   
-                },
-                {
-                    headers: {
-                        "Authorization": data.token,
-                        "content-type": "application/json"
-                    }
-                });
-            return response;
+                    }    
+                })
+            };
+            const response = await fetch(url, requestOptions);
+            const responseData = await response.json();
+            const userItem = JSON.parse(responseData.body);
+            console.log(userItem)
+            return userItem.Item;
         } catch (e) {
+            console.log(e)
             return null;
         }
     },
@@ -41,27 +44,10 @@ export default {
                         email: data.email
                     }  
                 })
-              };
+            };
             const response = await fetch(url, requestOptions);
-            const data = await response.json();
-            // const response = await axios.post(url,
-            //     {
-            //         service: 'users',
-            //         action: 'create',
-            //         data: {
-            //             userName: data.userName,
-            //             email: data.email
-            //         }   
-            //     },
-            //     {
-            //         headers: {
-            //             "Authorization": data.token,
-            //             "content-type": "application/json"
-            //         }
-            //     });
-            console.log('RESPONSE', response);
-            console.log(data)
-            return data;
+            const responseData = await response.json();
+            return responseData;
         } catch (e) {
             return null;
         }
@@ -69,8 +55,13 @@ export default {
 
     async updateUser(data) {
         try {
-            const response = await axios.post(url,
-                {
+            const requestOptions = {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": data.token
+                },
+                body: JSON.stringify({
                     service: 'users',
                     action: 'patch',
                     data: {
@@ -81,15 +72,12 @@ export default {
                         city: data.city,
                         birthday: data.birthday,
                         phone: data.phone
-                    }
-                },
-                {
-                    headers: {
-                        "Authorization": data.authToken,
-                        "content-type": "application/json"
-                    }
-                });
-            return response;
+                    }   
+                })
+            };
+            const response = await fetch(url, requestOptions);
+            const responseData = await response.json();
+            return responseData;
         } catch (e) {
             return null;
         }
@@ -97,41 +85,45 @@ export default {
 
     async updateUserStatus(data) {
         try {
-            const response = await axios.post(url,
-                {
+            const requestOptions = {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": data.token
+                },
+                body: JSON.stringify({
                     service: 'users',
                     action: 'updateStatus',
                     data: {
                         userName: data.userName,
                         status: data.status
-                    }
-                },
-                {
-                    headers: {
-                        "Authorization": data.authToken,
-                        "content-type": "application/json"
-                    }
-                });
-            return response;
+                    }  
+                })
+            };
+            const response = await fetch(url, requestOptions);
+            const responseData = await response.json();
+            return responseData;
         } catch (e) {
             return null;
         }
     },
 
-    async getAllConnectedUsers(data) {
+    async getAllConnectedUsers(data) {   
         try {
-            const response = await axios.post(url,
-                {
+            const requestOptions = {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": data.token
+                },
+                body: JSON.stringify({
                     service: 'posts',
                     action: 'getAllConnectedUsers'
-                },
-                {
-                    headers: {
-                        "Authorization": data.token,
-                        "content-type": "application/json"
-                    }
-                });
-            return response;
+                })
+            };
+            const response = await fetch(url, requestOptions);
+            const responseData = await response.json();
+            return responseData;
         } catch (e) {
             return null;
         }

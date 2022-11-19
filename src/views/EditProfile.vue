@@ -138,6 +138,7 @@
   <script>
   import { mapState } from 'vuex';
   import card from '@/components/cross/Card.vue';
+  import toastMessage from '@/helpers/toastMessage';
   import users from '@/services/users';
 
   export default {
@@ -160,16 +161,21 @@
         ...mapState(['authData']),
     },
     async created() {
-        const response = await this.users.getUser(this.authData);
-        if (!response) {
+        this.user = await this.users.getUser(this.authData);
+        if (!this.user) {
             console.log('error');
         }
-        const userItem = JSON.parse(response.data.body);
-        this.user = userItem.Item;
+        if (this.user.birthday) {
+            this.user.birthday = new Date(this.user.birthday);
+        }
     },
     methods: {
-      saveProfile() {
-        this.users.updateUser({...this.user, ...this.authData})
+      async saveProfile() {
+        const response = await this.users.updateUser({...this.user, ...this.authData})
+        if (!response) {
+            toastMessage.showError('An unexpected error occurred while updating the profile');
+        }
+        toastMessage.showSuccess('Your account has been successfully updated.');
       },
     },
   };
