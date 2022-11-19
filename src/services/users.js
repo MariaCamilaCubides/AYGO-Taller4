@@ -10,7 +10,7 @@ export default {
                     service: 'users',
                     action: 'get',
                     data: {
-                        userName: data.userName,
+                        userName: data.userName
                     }   
                 },
                 {
@@ -84,12 +84,31 @@ export default {
                     action: 'updateStatus',
                     data: {
                         userName: data.userName,
-                        status: data.status,
+                        status: data.status
                     }
                 },
                 {
                     headers: {
                         "Authorization": data.authToken,
+                        "content-type": "application/json"
+                    }
+                });
+            return response;
+        } catch (e) {
+            return null;
+        }
+    },
+
+    async getAllConnectedUsers(data) {
+        try {
+            const response = await axios.post(url,
+                {
+                    service: 'posts',
+                    action: 'getAllConnectedUsers'
+                },
+                {
+                    headers: {
+                        "Authorization": data.token,
                         "content-type": "application/json"
                     }
                 });

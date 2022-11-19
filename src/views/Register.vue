@@ -246,9 +246,9 @@
         const { user } = signInResult;
         await this.createUser(user);
         this.isLoading = false;
-        this.validateEmail = false;
         toastMessage.showSuccess('Your account has been successfully created.')
         this.$router.push(`${this.user}/about`);
+        this.validateEmail = false;
       },
       async createUser(user) {
         const userSession = user.getSignInUserSession();

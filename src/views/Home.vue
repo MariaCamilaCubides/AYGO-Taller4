@@ -63,8 +63,7 @@
                                     <div class="media-content">
                                         <div class="content">
                                             <p class="media-meta">
-                                                <strong>{{post.user.name}} {{post.user.lastName}}</strong>
-                                                <small>@{{ post.user.userName }}</small>
+                                                <small><strong>@{{ post.user.userName }}</strong></small>
                                                 <small class="has-text-grey">{{ post.createdAt }}</small>
                                             </p>
                                             <p> {{ post.message }}</p>
@@ -108,7 +107,7 @@
   
 <script>
 import { mapState } from 'vuex';
-// import posts from '@/services/posts';
+import posts from '@/services/posts';
 import users from '@/services/users';
 
 export default {
@@ -127,15 +126,17 @@ data() {
         connectedUsers: 0,
         historyPosts: [],
         users,
+        posts,
     };
 },
 computed: {
     ...mapState(['authData']),
 },
 created() {
-    // setInterval(() => {
-    //     this.historyPosts = this.posts.getAllPosts(this.authData)
-    // }, 1000);
+    setInterval(async () => {
+        this.historyPosts = await this.posts.getAllPosts(this.authData)
+        this.connectedUsers = await this.users.getAllConnectedUsers(this.authData);
+    }, 60 * 1000);
 },
 methods: {
     insert(emoji) {
@@ -143,7 +144,7 @@ methods: {
         this.users.createUser(this.authData)
     },
     addNewPost() {
-        // this.posts.createPost(this.input, this.authData);
+        this.posts.createPost(this.input, this.authData);
         this.input = '';
     }
 },
