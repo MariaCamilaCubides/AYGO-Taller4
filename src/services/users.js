@@ -27,22 +27,41 @@ export default {
 
     async createUser(data) {
         try {
-            const response = await axios.post(url,
-                {
+            const requestOptions = {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": data.token
+                },
+                body: JSON.stringify({
                     service: 'users',
                     action: 'create',
                     data: {
                         userName: data.userName,
                         email: data.email
-                    }   
-                },
-                {
-                    headers: {
-                        "Authorization": data.token,
-                        "content-type": "application/json"
-                    }
-                });
-            return response;
+                    }  
+                })
+              };
+            const response = await fetch(url, requestOptions);
+            const data = await response.json();
+            // const response = await axios.post(url,
+            //     {
+            //         service: 'users',
+            //         action: 'create',
+            //         data: {
+            //             userName: data.userName,
+            //             email: data.email
+            //         }   
+            //     },
+            //     {
+            //         headers: {
+            //             "Authorization": data.token,
+            //             "content-type": "application/json"
+            //         }
+            //     });
+            console.log('RESPONSE', response);
+            console.log(data)
+            return data;
         } catch (e) {
             return null;
         }
