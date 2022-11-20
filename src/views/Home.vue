@@ -135,6 +135,7 @@ computed: {
 async created() {
     this.user = this.authData;
     setInterval(async () => {
+        console.log('Ejecutando intervalo');
         this.getPostsAndConnectedUsers();
     }, 60 * 1000);
     this.isLoading = true;
