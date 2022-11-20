@@ -134,10 +134,13 @@ computed: {
 },
 async created() {
     this.user = this.authData;
-    setInterval(async () => {
-        console.log('Ejecutando intervalo');
-        this.getPostsAndConnectedUsers();
-    }, 60 * 1000);
+    this.$crontab.addJob({
+      name: 'counter',
+      interval: {
+        seconds: '/1',
+      },
+      job: this.getPostsAndConnectedUsers
+    })
     this.isLoading = true;
     await this.getPostsAndConnectedUsers();
     this.isLoading = false;

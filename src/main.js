@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Buefy from 'buefy';
 import VeeValidate from 'vee-validate';
+import VueCrontab from 'vue-crontab';
 import { Amplify, Auth } from 'aws-amplify';
 import { EmojiPickerPlugin } from 'vue-emoji-picker'
 
@@ -17,6 +18,7 @@ Vue.use(Buefy, {
 });
 Vue.use(EmojiPickerPlugin);
 Vue.use(VeeValidate);
+Vue.use(VueCrontab);
 
 Amplify.configure({
   Auth: {      
