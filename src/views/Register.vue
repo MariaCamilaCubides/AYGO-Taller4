@@ -244,6 +244,7 @@
           return;
         }
         const { user } = signInResult;
+        this.authUser(user);
         await this.createUser(user);
         this.isLoading = false;
         toastMessage.showSuccess('Your account has been successfully created.')

@@ -52,7 +52,7 @@ router.beforeEach(async (to, from, next) => {
   
     const authenticated = await userIsAuthenticated();
 
-    if (!authenticated && to.path !== '/login') {
+    if (!authenticated && to.path !== '/login' && to.path !== '/register') {
       return next('/login');
     }
   
