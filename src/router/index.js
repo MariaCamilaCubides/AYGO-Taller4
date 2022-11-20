@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import store from '../store';
 
 const routes = [
   {
@@ -15,11 +16,6 @@ const routes = [
     path: '/home',
     component: Vue.component('homeComponent', () => import('@/views/Home.vue')),
   },
-  /* {
-    name: 'profile',
-    path: '/profile',
-    component: Vue.component('profile', () => import('@/views/Profile.vue')),
-  }, */
   {
     name: 'editProfile',
     path: '/:profile/about',
@@ -43,19 +39,26 @@ const router = new Router({
   routes,
 });
 
-function userIsAuthenticated() {
-    return false;
-
+async function userIsAuthenticated() {
+  try {
+    if (store.state && store.state.authData && store.state.authData.token) return true;
+  } catch {
+    //
+  }
+  return false;
 }
 
 router.beforeEach(async (to, from, next) => {
   
     const authenticated = await userIsAuthenticated();
+
+    if (!authenticated && to.path !== '/login') {
+      return next('/login');
+    }
   
     // Define what to do when user visits root
     if (to.path === '/') {
-      if (authenticated) return next('/home');
-      return next('/login');
+      return next('/home');
     }
 
     return next();

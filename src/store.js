@@ -10,7 +10,6 @@ export default new Vuex.Store({
             email: '',
             token: '',
         },
-        connectedUsers: 0,
     },
     mutations: {
         authUser(state, user) {
@@ -24,14 +23,5 @@ export default new Vuex.Store({
                 token,
             };
         },
-        increaseConnectedUsers(state) {
-            state.connectedUsers +=1;
-        },
-        decreaseConnectedUsers(state) {
-            state.connectedUsers -=1;
-        }
     },
-    actions: {
-
-    }
 })

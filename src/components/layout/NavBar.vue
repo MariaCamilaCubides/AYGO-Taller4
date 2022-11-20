@@ -162,8 +162,12 @@
           this.mainLayoutWidth = mainLayoutWidth;
         });
       },
-      logoutApp() {
-        this.cognitoAuthentication.signOut().then(() => this.$router.go('/login'));
+      async logoutApp() {
+        const user = this.authData;
+        user.status = 0;
+        await this.users.updateUserStatus(user);
+        this.cognitoAuthentication.signOut();
+        this.$router.go('/login')
       },
     },
   };
