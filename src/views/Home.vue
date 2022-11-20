@@ -154,6 +154,7 @@ methods: {
         this.input = '';
     },
     async getPostsAndConnectedUsers() {
+        console.log('hola')
         this.historyPosts = await this.posts.getAllPosts(this.authData)
         this.connectedUsers = await this.users.getAllConnectedUsers(this.authData);
         this.connectedUsersAmount = this.connectedUsers.length;
