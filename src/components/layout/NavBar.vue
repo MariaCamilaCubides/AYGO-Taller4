@@ -133,10 +133,10 @@
         if (from.path === '/') return;
       },
     },
-    destroyed() {
+    async beforeDestroy() {
       const user = this.authData;
-        user.status = 0;
-        this.users.updateUserStatus(user);
+      user.status = 0;
+      await this.users.updateUserStatus(user);
     },
     methods: {
       updateUser() {
