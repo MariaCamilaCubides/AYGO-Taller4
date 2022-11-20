@@ -148,7 +148,6 @@ async created() {
 methods: {
     insert(emoji) {
         this.input += emoji
-        this.users.createUser(this.authData)
     },
     async addNewPost() {
         await this.posts.createPost({message:this.input, ...this.authData});
