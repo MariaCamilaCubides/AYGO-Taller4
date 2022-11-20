@@ -20,10 +20,8 @@ export default {
             const response = await fetch(url, requestOptions);
             const responseData = await response.json();
             const userItem = JSON.parse(responseData.body);
-            console.log(userItem)
             return userItem.Item;
         } catch (e) {
-            console.log(e)
             return null;
         }
     },
@@ -117,15 +115,17 @@ export default {
                     "Authorization": data.token
                 },
                 body: JSON.stringify({
-                    service: 'posts',
+                    service: 'users',
                     action: 'getAllConnectedUsers'
                 })
             };
             const response = await fetch(url, requestOptions);
             const responseData = await response.json();
-            return responseData;
+            const users = JSON.parse(responseData.body);
+            console.log('connected', users)
+            return users;
         } catch (e) {
-            return null;
+            return [];
         }
     },
 };

@@ -1,44 +1,49 @@
-import axios from 'axios';
-
 const url = `${process.env.VUE_APP_API_URL}/posts`;
 
 export default {
     async getAllPosts(data) {
         try {
-            const response = await axios.post(url,
-                {
-                    service: 'posts',
-                    action: 'getAllPosts'
+            const requestOptions = {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": data.token
                 },
-                {
-                    headers: {
-                        "Authorization": data.token,
-                        "content-type": "application/json"
-                    }
-                });
-            return response;
+                body: JSON.stringify({
+                    service: 'posts',
+                    action: 'getAllPosts' 
+                })
+            };
+            const response = await fetch(url, requestOptions);
+            const responseData = await response.json();
+            const posts = JSON.parse(responseData.body);
+            return posts;
         } catch (e) {
-            return null;
+            return [];
         }
     },
 
     async createPost(data) {
         try {
-            await axios.post(url,
-                {
+            const requestOptions = {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": data.token
+                },
+                body: JSON.stringify({
                     service: 'posts',
                     action: 'create',
                     data: {
                         userName: data.userName,
                         message: data.message
                     }   
-                },
-                {
-                    headers: {
-                        "Authorization": data.token,
-                        "content-type": "application/json"
-                    }
-                });
+                })
+            };
+            const response = await fetch(url, requestOptions);
+            console.log('hola', response)
+            const responseData = await response.json();
+            return responseData;
         } catch (e) {
             return null;
         }

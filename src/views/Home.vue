@@ -1,5 +1,6 @@
 <template>
     <div class="lo-que-sea">
+        <b-loading :is-full-page="true" v-model="isLoading" :can-cancel="true"></b-loading>
         <section slot="body">  
             <div class="columns" style="flex:1;flex-direction: row;justify-content: space-between; height: 100%">
                 <section class="column">
@@ -15,7 +16,7 @@
                                         @error="failed_image = true"
                                     />
                                 </p>
-                                <input type="text" autocomplete="on" :placeholder="`What's on your mind, ${user.name}?`" v-model="input" class="input is-rounded">
+                                <input type="text" autocomplete="on" :placeholder="`What's on your mind, ${user.name ? user.name: user.userName}?`" v-model="input" class="input is-rounded">
                             </b-field>
                             <b-field>
                                 <emoji-picker @emoji="insert" :search="search" class="force-right">
@@ -52,25 +53,21 @@
                             </b-field>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card"
+                        v-for="post in historyPosts"
+                        :key="post.id"
+                    >
                         <div class="card-content">
-                            <div
-                                class="media-list"
-                                v-for="post in historyPosts"
-                                :key="post"
-                            >
+                            <div class="media-list">
                                 <article class="media">
                                     <div class="media-content">
                                         <div class="content">
                                             <p class="media-meta">
-                                                <small><strong>@{{ post.user.userName }}</strong></small>
-                                                <small class="has-text-grey">{{ post.createdAt }}</small>
+                                                <small><strong>@{{ post.userName }}</strong></small>
+                                                <small class="has-text-grey" style="margin-left: 1em;">{{ post.createdAt }}</small>
                                             </p>
                                             <p> {{ post.message }}</p>
                                         </div>
-                                    </div>
-                                    <div class="media-right">
-                                        <button class="delete"></button>
                                     </div>
                                 </article>
                             </div>
@@ -81,10 +78,13 @@
                     <div class="card">
                         <div class="card-content">
                             <p class="field">
-                                <strong>Connected users ({{ connectedUsers }})</strong>
+                                <strong>Connected users ({{ connectedUsersAmount }})</strong>
                             </p>
                             <div class="container-header">
-                                <b-field>
+                                <b-field
+                                    v-for="user in connectedUsers"
+                                    :key="user.userName"
+                                >
                                     <p class="image is-32x32">
                                         <b-image
                                             :src="require('@/assets/account-circle.svg')"
@@ -94,7 +94,7 @@
                                             @error="failed_image = true"
                                         />
                                     </p>
-                                    <p>Camila Cubides</p>
+                                    <p>{{ user.name && user.lastName ? `${user.name} ${user.lastName}`: user.userName}}</p>
                                 </b-field>
                             </div>
                         </div>
@@ -114,29 +114,32 @@ export default {
     name: 'homeComponent',
 data() {
     return {
-        isLoading: false,
         name: '',
         lastName: '',
         phoneNumber: '',
         user: {},
-        loading: false,
         file: null,
         input: '',
         search: '',
-        connectedUsers: 0,
+        connectedUsersAmount: 0,
+        connectedUsers: [],
         historyPosts: [],
         users,
         posts,
+        isLoading: false,
     };
 },
 computed: {
     ...mapState(['authData']),
 },
-created() {
+async created() {
+    this.user = this.authData;
     setInterval(async () => {
-        this.historyPosts = await this.posts.getAllPosts(this.authData)
-        this.connectedUsers = await this.users.getAllConnectedUsers(this.authData);
+        // this.getPostsAndConnectedUsers();
     }, 60 * 1000);
+    this.isLoading = true;
+    await this.getPostsAndConnectedUsers();
+    this.isLoading = false;
 },
 methods: {
     insert(emoji) {
@@ -144,8 +147,13 @@ methods: {
         this.users.createUser(this.authData)
     },
     addNewPost() {
-        this.posts.createPost(this.input, this.authData);
+        this.posts.createPost1(this.input, this.authData);
         this.input = '';
+    },
+    async getPostsAndConnectedUsers() {
+        // this.historyPosts = await this.posts.getAllPosts(this.authData)
+        this.connectedUsers = await this.users.getAllConnectedUsers(this.authData);
+        this.connectedUsersAmount = this.connectedUsers.length;
     }
 },
 };

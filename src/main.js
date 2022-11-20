@@ -1,7 +1,5 @@
 import Vue from 'vue';
 import Buefy from 'buefy';
-import axios from 'axios';
-import VueAxios from 'vue-axios';
 import VeeValidate from 'vee-validate';
 import { Amplify, Auth } from 'aws-amplify';
 import { EmojiPickerPlugin } from 'vue-emoji-picker'
@@ -14,7 +12,6 @@ import Layout from './App.vue';
 
 Vue.config.productionTip = true;
 
-Vue.use(VueAxios, axios);
 Vue.use(Buefy, {
   defaultIconPack: 'mdi',
 });

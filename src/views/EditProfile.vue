@@ -28,23 +28,6 @@
                                 </p>
                             </div>
                             <div class="card-content">
-                                <b-field label="Profile picture" horizontal>
-                                    <b-upload v-model="profilePicture" class="file-label">
-                                        <span class="file-cta">
-                                            <b-icon class="file-icon" icon="upload"></b-icon>
-                                            <span class="file-label">{{ profilePicture ? profilePicture.name : 'Click to upload' }}</span>
-                                        </span>
-                                    </b-upload>
-                                </b-field>
-                                <b-field label="Cover photo" horizontal>
-                                    <b-upload v-model="coverPhoto" class="file-label">
-                                        <span class="file-cta">
-                                            <b-icon class="file-icon" icon="upload"></b-icon>
-                                            <span class="file-label">{{ coverPhoto ? coverPhoto.name : 'Click to upload' }}</span>
-                                        </span>
-                                    </b-upload>
-                                </b-field>
-                                <hr/>
                                 <b-field label="Name" horizontal>
                                     <b-input v-model="user.name" icon-right="pencil"></b-input>
                                 </b-field>
@@ -85,22 +68,6 @@
                                 </p>
                             </div>
                             <div class="card-content">
-                                <p class="image is-128x128">
-                                    <b-image
-                                        :src="require('@/assets/account-circle.svg')"
-                                        :src-fallback="require('@/assets/account-circle.svg')"
-                                        :rounded="true"
-                                        :lazy="false"
-                                        @error="failed_image = true"
-                                    />
-                                </p>
-                                <hr/>
-                                <b-image
-                                    :src="require('@/assets/loginBackground.jpg')"
-                                    :src-fallback="require('@/assets/account-circle.svg')"
-                                    :lazy="false"
-                                />
-                                <hr/>
                                 <div class="container-header">
                                     <div class="grid_5" id="social_icons">
                                         <p><b-icon icon="account"/>{{ user.name }} {{ user.lastName }}</p>
