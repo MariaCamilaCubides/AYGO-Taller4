@@ -135,7 +135,7 @@ computed: {
 async created() {
     this.user = this.authData;
     setInterval(async () => {
-        // this.getPostsAndConnectedUsers();
+        //this.getPostsAndConnectedUsers();
     }, 60 * 1000);
     this.isLoading = true;
     await this.getPostsAndConnectedUsers();
@@ -147,7 +147,7 @@ methods: {
         this.users.createUser(this.authData)
     },
     addNewPost() {
-        this.posts.createPost1(this.input, this.authData);
+        this.posts.createPost(this.input, this.authData);
         this.input = '';
     },
     async getPostsAndConnectedUsers() {

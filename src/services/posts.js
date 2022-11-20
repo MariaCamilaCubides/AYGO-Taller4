@@ -41,7 +41,6 @@ export default {
                 })
             };
             const response = await fetch(url, requestOptions);
-            console.log('hola', response)
             const responseData = await response.json();
             return responseData;
         } catch (e) {

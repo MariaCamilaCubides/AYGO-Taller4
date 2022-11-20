@@ -9,7 +9,7 @@ exports.handler = async (action, data) => {
             break;
             
         case 'getAllPosts':
-            response = await getAllPosts(data);
+            response = await getAllPosts();
             break;
         
         default:
@@ -38,7 +38,7 @@ async function createPost(data) {
     };
 }
 
-async function getAllPosts(data) {
+async function getAllPosts() {
     const posts = await dynamoDB.scanAll(
         'posts'
     );

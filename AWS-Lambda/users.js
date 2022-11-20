@@ -20,7 +20,7 @@ exports.handler = async (action, data) => {
             break;
             
         case 'getAllConnectedUsers':
-            response = await getAllUsers(data);
+            response = await getAllUsers();
             break;
         
         default:
@@ -34,7 +34,6 @@ async function createUser(data) {
         userName: data.userName,
         email: data.email,
     });
-    console.log('CREAR USUARIO', user);
     return {
         statusCode: 200,
         body: JSON.stringify(user)
@@ -79,12 +78,12 @@ async function updateUserStatus(data) {
     const user = await dynamoDB.updateRecord(
         'users',
         { userName: data.userName },
-        "set #v1 = :status",
+        "set #v1 = :userStatus",
         {
-            "#v1": "status",
+            "#v1": "userStatus",
         },
         {
-            ":status": data.status,
+            ":userStatus": data.status,
         }
     );
      return {
@@ -93,10 +92,10 @@ async function updateUserStatus(data) {
     };
 }
 
-async function getAllUsers(data) {
+async function getAllUsers() {
     const users = await dynamoDB.scanAll(
         'users',
-        'status = :this_status',
+        'userStatus = :this_status',
         {':this_status' : 1}
     );
     return {

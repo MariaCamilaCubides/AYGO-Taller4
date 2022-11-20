@@ -12,7 +12,6 @@ async function createRecord(table, data) {
         }, (err, data) => {
             if (err) { reject(err) }
             else {
-                console.log('DATA', data);
                 resolve(data);
             }
         });
@@ -30,7 +29,6 @@ function updateRecord(table, key, updateExpression, attributeNames, attributeVal
     }, (err, data) => {
             if (err) { reject(err) }
             else {
-                console.log('DATA', data);
                 resolve(data);
             }
         });
@@ -45,7 +43,6 @@ function getRecord(table, key) {
         }, (err, data) => {
             if (err) { reject(err) }
             else {
-                console.log('DATA', data);
                 resolve(data);
             }
         });

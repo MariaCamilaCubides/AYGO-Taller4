@@ -129,9 +129,6 @@
     },
     async created() {
         this.user = await this.users.getUser(this.authData);
-        if (!this.user) {
-            console.log('error');
-        }
         if (this.user.birthday) {
             this.user.birthday = new Date(this.user.birthday);
         }

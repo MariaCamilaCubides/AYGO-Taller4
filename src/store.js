@@ -17,7 +17,6 @@ export default new Vuex.Store({
             const userSession = user.getSignInUserSession();
             const idToken = userSession.getIdToken();
             const token = idToken.getJwtToken();
-            console.log(token)
             const payload = idToken.decodePayload();
             state.authData = {
                 userName: payload['cognito:username'],

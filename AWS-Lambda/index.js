@@ -21,6 +21,7 @@ exports.handler = async (event, context, callback) => {
                 })
             }
     }
+
     lambdaResponse(callback, response.statusCode, response.body);
 };
 
@@ -29,7 +30,9 @@ function lambdaResponse(callback, statusCode, body) {
     statusCode,
     body,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+        "Access-Control-Allow-Headers" : "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST"
     },
   });
 }

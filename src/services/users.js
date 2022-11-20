@@ -122,7 +122,6 @@ export default {
             const response = await fetch(url, requestOptions);
             const responseData = await response.json();
             const users = JSON.parse(responseData.body);
-            console.log('connected', users)
             return users;
         } catch (e) {
             return [];
