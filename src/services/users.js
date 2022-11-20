@@ -1,4 +1,4 @@
-const url = `${process.env.VUE_APP_API_URL}/users`;
+const url = process.env.VUE_APP_API_URL;
 
 export default {
     async getUser(data) {

@@ -150,8 +150,8 @@ methods: {
         this.input += emoji
         this.users.createUser(this.authData)
     },
-    addNewPost() {
-        this.posts.createPost(this.input, this.authData);
+    async addNewPost() {
+        await this.posts.createPost({message:this.input, ...this.authData});
         this.input = '';
     },
     async getPostsAndConnectedUsers() {
