@@ -27,14 +27,14 @@ function toUrlString(buffer) {
 
 async function createPost(data) {
     const postId = toUrlString(randomBytes(16));
-    const post = await dynamoDB.createRecord('posts', {
+    await dynamoDB.createRecord('posts', {
         id: postId,
         userName: data.userName,
         message: data.message,
     });
     return {
         statusCode: 200,
-        body: JSON.stringify(post)
+        body: 'Created'
     };
 }
 

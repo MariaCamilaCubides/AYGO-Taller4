@@ -3,7 +3,12 @@ const posts = require('./posts');
 
 
 exports.handler = async (event, context, callback) => {
-    let response;
+    let response = {
+        statusCode: 500,
+        body: JSON.stringify({
+            Error: 'Unexpected error'
+        })
+    };
     switch (event.service) {
         case 'users':
             response = await users.handler(event.action, event.data);

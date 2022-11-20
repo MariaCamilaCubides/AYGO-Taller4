@@ -17,6 +17,9 @@ export default {
             const response = await fetch(url, requestOptions);
             const responseData = await response.json();
             const posts = JSON.parse(responseData.body);
+            posts.sort(function(a,b){
+                return new Date(b.createdAt) - new Date(a.createdAt);
+              });
             return posts;
         } catch (e) {
             return [];

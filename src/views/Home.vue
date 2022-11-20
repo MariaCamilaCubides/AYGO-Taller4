@@ -1,5 +1,5 @@
 <template>
-    <div class="lo-que-sea">
+    <div class="home">
         <b-loading :is-full-page="true" v-model="isLoading" :can-cancel="true"></b-loading>
         <section slot="body">  
             <div class="columns" style="flex:1;flex-direction: row;justify-content: space-between; height: 100%">
@@ -135,7 +135,7 @@ computed: {
 async created() {
     this.user = this.authData;
     setInterval(async () => {
-        //this.getPostsAndConnectedUsers();
+        this.getPostsAndConnectedUsers();
     }, 60 * 1000);
     this.isLoading = true;
     await this.getPostsAndConnectedUsers();
@@ -151,7 +151,7 @@ methods: {
         this.input = '';
     },
     async getPostsAndConnectedUsers() {
-        // this.historyPosts = await this.posts.getAllPosts(this.authData)
+        this.historyPosts = await this.posts.getAllPosts(this.authData)
         this.connectedUsers = await this.users.getAllConnectedUsers(this.authData);
         this.connectedUsersAmount = this.connectedUsers.length;
     }
@@ -160,7 +160,7 @@ methods: {
 </script>
 
 <style scoped>
-.lo-que-sea {
+.home {
     padding: 0px 0px 0px 17em;
     display: block;
     align-items: center;
